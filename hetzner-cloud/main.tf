@@ -95,7 +95,8 @@ resource "hcloud_server" "new_server" {
   image        = "ubuntu-22.04"
   server_type  = "cx23" 
   location     = var.location
-  
+  user_data    = file("${path.module}/install_jenkins.sh")
+
   public_net {
     ipv4_enabled = true
     ipv6_enabled = false
