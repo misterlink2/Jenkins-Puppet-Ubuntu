@@ -1,0 +1,21 @@
+# Exclude the Terraform directory (providers and modules)
+.terraform/
+
+# Exclude all state files (contain plain-text secrets and IP info)
+*.tfstate
+*.tfstate.backup
+*.tfstate.lock.info
+.terraform.lock.hcl
+
+# Exclude your variables and secrets files
+terraform.tfvars
+terraform.tfvars.json
+
+# Exclude any override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Exclude crash logs
+crash.log
