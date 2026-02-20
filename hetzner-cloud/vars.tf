@@ -13,3 +13,9 @@ variable "hcloud_token" {
   type        = string
   sensitive   = true
 }
+
+variable "allowed_ips" {
+  type        = list(string)
+  description = "List of IP addresses allowed to access the server"
+  default     = ["206.55.186.141/32"]
+}

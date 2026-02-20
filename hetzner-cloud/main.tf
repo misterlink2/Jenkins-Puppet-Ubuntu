@@ -20,31 +20,31 @@ resource "hcloud_firewall" "restricted_firewall" {
 
   # Inbound: Ports 22 ONLY from my IP
   rule {
-    direction = "in"
-    protocol  = "tcp"
-    port      = "22"
-    source_ips = ["206.55.186.141/32"]
+    direction  = "in"
+    protocol   = "tcp"
+    port       = "22"
+    source_ips = var.allowed_ips
   }
 
  # Inbound: Ports 80, 443, 8000 open to any IP
   rule {
-    direction = "in"
-    protocol  = "tcp"
-    port      = "80"
+    direction  = "in"
+    protocol   = "tcp"
+    port       = "80"
     source_ips = ["0.0.0.0/0", "::/0"]
   }
 
   rule {
-    direction = "in"
-    protocol  = "tcp"
-    port      = "443"
+    direction  = "in"
+    protocol   = "tcp"
+    port       = "443"
     source_ips = ["0.0.0.0/0", "::/0"]
   }
 
   rule {
-    direction = "in"
-    protocol  = "tcp"
-    port      = "8000"
+    direction  = "in"
+    protocol   = "tcp"
+    port       = "8000"
     source_ips = ["0.0.0.0/0", "::/0"]
   }
 
@@ -94,7 +94,7 @@ resource "hcloud_server" "new_server" {
   name         = "server-${local.project}"
   image        = "ubuntu-22.04"
   server_type  = "cx23" 
-  location   = var.location
+  location     = var.location
   
   public_net {
     ipv4_enabled = true
