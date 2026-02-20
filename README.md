@@ -1,5 +1,5 @@
 # Jenkins-Puppet-Ubuntu
-Install Jenkins on a fresh install of Ubuntu with Puppet
+Install Jenkins on port 8000 on a fresh install of Ubuntu with Puppet
 
 # 1. Download the Jammy release package from the correct URL
 wget https://apt.puppetlabs.com/puppet8-release-jammy.deb
