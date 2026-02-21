@@ -93,7 +93,7 @@ resource "hcloud_ssh_key" "my_key" {
 resource "hcloud_server" "new_server" {
   name         = "server-${local.project}"
   image        = "ubuntu-22.04"
-  server_type  = "cx23" 
+  server_type  = "cx23" # cpx22 can be used if cx23 is not available
   location     = var.location
   #user_data    = file("${path.module}/install_jenkins.sh")
 

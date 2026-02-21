@@ -1,7 +1,7 @@
 # Jenkins-Puppet-Ubuntu
-Follow these instructions to install Jenkins on port 8000 on Ubuntu 22.04 with Puppet.
+Follow these instructions to install Jenkins on port 8000 on Ubuntu 22.04 (Jammy Jellyfish) with Puppet. This is only configured for Ubuntu 22.04.
 
-### 1. Download the Ubuntu 22.04 (Jammy Jellyfish) Puppet 8 release package
+### 1. Download the Ubuntu 22.04 Puppet 8 release package
 Downloads Puppet config file.
 
 ```wget https://apt.puppetlabs.com/puppet8-release-jammy.deb```
@@ -42,7 +42,7 @@ Puppet modifies the system to match what is in the manifest.
 ```puppet apply Jenkins-Puppet-Ubuntu/jenkins.pp```
 
 ### 9. Use Jenkins
-If running this on your local device, visit ```localhost:8000``` in your browser to view the Jenkins UI, else visit your server's IP address.
+If running this on your local device, visit ```localhost:8000``` in your browser to view the Jenkins UI, else visit ```<your-server-IP>:8000```.
 
 ## Debug commands
 Run these to troubleshoot issues.
