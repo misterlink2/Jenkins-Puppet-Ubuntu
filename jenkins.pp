@@ -1,12 +1,12 @@
-exec { 'install-java-17':
-  command => '/usr/bin/apt-get install -y openjdk-17-jdk',
-  unless  => '/usr/bin/dpkg -l openjdk-17-jdk | grep -q "^ii"',
+exec { 'install-java-21':
+  command => '/usr/bin/apt-get install -y openjdk-21-jdk',
+  unless  => '/usr/bin/dpkg -l openjdk-21-jdk | grep -q "^ii"',
 }
 
 exec { 'add-jenkins-key':
   command => '/usr/bin/curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2026.key | /usr/bin/tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null',
   creates => '/usr/share/keyrings/jenkins-keyring.asc',
-  require => Exec['install-java-17'],
+  require => Exec['install-java-21'],
 }
 
 apt::source { 'jenkins':

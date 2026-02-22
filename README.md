@@ -1,5 +1,12 @@
 # Jenkins-Puppet-Ubuntu
-Follow these instructions to install Jenkins on port 8000 on Ubuntu 22.04 (Jammy Jellyfish) with Puppet. This is only configured for Ubuntu 22.04.
+Follow these instructions to install Jenkins on port 8000 on Ubuntu 22.04 with Puppet.
+
+## Requirements
+- Ubuntu 22.04 (Jammy Jellyfish)
+- Ubuntu user with Sudo permissions or root
+- These instructions are best viewed here: [https://github.com/misterlink2/Jenkins-Puppet-Ubuntu/blob/main/README.md](https://github.com/misterlink2/Jenkins-Puppet-Ubuntu/blob/main/README.md)
+
+## Method 1, Configure and run Puppet
 
 ### 1. Download the Ubuntu 22.04 Puppet 8 release package
 Downloads Puppet config file.
@@ -16,33 +23,46 @@ Refreshes the OS knowledge of available packages.
 
 ```sudo apt update```
 
-### 4. Install puppet-agent
-Downloads the Puppet Agent.
+### 4. Install git and puppet-agent
+Downloads git and the Puppet Agent.
 
-```sudo apt install -y puppet-agent```
+```sudo apt install -y git puppet-agent```
 
-### 5. Path Configuration
-Updates current terminal to include Puppet in the PATH, so the puppet command can be ran.
-
-```source /etc/profile.d/puppet-agent.sh```
-
-### 6 Install puppet-jenkins
+### 5. Install puppet-jenkins
 Downloads the Jenkins module to handle Java and Jenkins configuration.
 
-```puppet module install puppet-jenkins```
+```sudo /opt/puppetlabs/bin/puppet module install puppet-jenkins```
 
-### 7. Pull manifest from Github
+### 6. Pull manifest from Github
 Pulls manifest from Github.
 
 ```git clone https://github.com/misterlink2/Jenkins-Puppet-Ubuntu.git```
 
-### 8. Apply manifest
+### 7. Apply manifest
 Puppet modifies the system to match what is in the manifest.
 
-```puppet apply Jenkins-Puppet-Ubuntu/jenkins.pp```
+```sudo /opt/puppetlabs/bin/puppet apply Jenkins-Puppet-Ubuntu/jenkins.pp```
 
-### 9. Use Jenkins
+### 8. Use Jenkins
 If running this on your local device, visit ```localhost:8000``` in your browser to view the Jenkins UI, else visit ```<your-server-IP>:8000```.
+
+## Method 2, Run bash script
+This is not an idempotent script, but shows that the terminal and Puppet commands can be ran in a script, and subsequent puppet commands are still idempotent.
+
+Pull down the script, manifest, etc.
+
+```git clone https://github.com/misterlink2/Jenkins-Puppet-Ubuntu.git```
+
+Give the script execute permissions
+
+```chmod +x ./Jenkins-Puppet-Ubuntu/hetzner-cloud/install_jenkins.sh```
+
+Run the script
+
+```./Jenkins-Puppet-Ubuntu/hetzner-cloud/install_jenkins.sh```
+
+## Method 3, cloud-init script
+This just takes the earlier mentioned ```install_jenkins.sh``` script and runs it automatically when the server is spun up. This is specified in ```hetzner-cloud/main.tf``` (line 98), and needs to be uncommented to be enabled. This uses Terraform to create a cloud server on Hetzner cloud, where a Hetzner account and API token are needed. This script is still not idempotent, but shows that Jenkins can be set up upon server creation without any commands being ran. Subsequent Puppet commands are still idempotent.
 
 ## Debug commands
 Run these to troubleshoot issues.
@@ -53,6 +73,7 @@ Run these to troubleshoot issues.
 | `puppet module upgrade puppet-jenkins --force` | Update the puppet-jenkins module to the latest version. Older puppet modules can run into issues interacting with Jenkins. |
 | `puppet module list` | Verify the module versions. puppet-jenkins should be 6.x.x or higher. |
 | `curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2026.key \| tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null` | Download Jenkins repository signing key. The OS uses this key to verify that the Jenkins software isn't tampered with. The previous key has expired out. More info [here](https://www.jenkins.io/blog/2025/12/23/repository-signing-keys-changing/) |
+|`source /etc/profile.d/puppet-agent.sh`| Updates current terminal to include Puppet in the PATH, does not include Sudo PATH|
 | `systemctl status jenkins` | Check the status of the Jenkins service. Provides high level summary of the Jenkins service. |
 | `systemctl cat jenkins` | Shows how Jenkins is being launched. |
 | `systemctl show jenkins --property=Environment` | Show the environment variables for the Jenkins service. |
