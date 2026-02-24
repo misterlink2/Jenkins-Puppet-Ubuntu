@@ -1,13 +1,8 @@
-exec { 'install-java-21':
-  command => '/usr/bin/apt-get install -y openjdk-21-jdk',
-  unless  => '/usr/bin/dpkg -l openjdk-21-jdk | grep -q "^ii"',
+package { 'openjdk-21-jdk':
+  ensure => installed,
 }
 
-exec { 'add-jenkins-key':
-  command => '/usr/bin/curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2026.key | /usr/bin/tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null',
-  creates => '/usr/share/keyrings/jenkins-keyring.asc',
-  require => Exec['install-java-21'],
-}
+include apt
 
 apt::source { 'jenkins':
   location => 'https://pkg.jenkins.io/debian-stable',
@@ -17,21 +12,15 @@ apt::source { 'jenkins':
     'id'     => '5E386EADB55F01504CAE8BCF7198F4B714ABFC68',
     'source' => 'https://pkg.jenkins.io/debian-stable/jenkins.io-2026.key',
   },
-  notify   => Exec['apt-update-jenkins'],
-}
-
-exec { 'apt-update-jenkins':
-  command     => '/usr/bin/apt-get update',
-  refreshonly => true,
 }
 
 class { 'jenkins':
-  port         => 8000,
   install_java => false,
   repo         => false,
   config_hash  => {
     'JENKINS_PORT' => { 'value' => '8000' },
   },
-  require      => Exec['apt-update-jenkins'],
+  require      => [Package['openjdk-21-jdk'], Apt::Source['jenkins']],
 }
 
+Apt::Source['jenkins'] ~> Class['apt::update'] -> Class['jenkins']
